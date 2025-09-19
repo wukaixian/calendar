@@ -1,21 +1,23 @@
 # 现代农历日历
 
-一个美观、现代的 Web 日历应用，结合公历、农历及中国法定节假日信息，可直接在浏览器中查看节日、调休和节气。
+一个美观、现代的 Web 日历应用，结合公历、农历及中国法定节假日信息，可直接在浏览器中查看节日、调休和节气提示。
 
-## 功能特性
+## 功能亮点
 
-- 📅 6 × 7 月视图：支持跨月日期淡化展示，日历 hover 时提供详细提示。
-- 🌙 农历支持：使用 `solarlunar` 显示农历日期、节日与节气，并在初一显示农历月。
-- 🏖️ 节假日同步：自动从 [timor.tech](https://timor.tech/api/holiday/year/) 获取国务院法定节假日数据，包含调休补班信息。
-- ⚡ 快速切换：支持上下月切换、回到今天的快捷按钮。
-- 🧊 现代视觉：基于玻璃拟态风格的暗色主题，包含节假日、调休、今日等醒目标记。
+- 📅 6×7 月视图：跨月日期自动淡化，悬停即可查看完整日期与节假日说明
+- 🌙 农历支持：依赖 `solarlunar` 实时计算农历、节日及节气，初一自动展示农历月份
+- 🏖️ 节假日同步：懒加载请求 [timor.tech](https://timor.tech/api/holiday/year/) 的国务院放假安排，并区分调休补班
+- ⚡ 快捷交互：提供上一月 / 下一月切换、年份月份下拉和“一键回到今天”
+- 🧊 现代视觉：玻璃拟态风格暗色主题，突出法定假日、调休及当天标记
+- 📱 PWA 能力：支持离线访问与安装到桌面，自动更新最新版本
 
 ## 技术栈
 
 - [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- [Vite 7](https://vitejs.dev/) 作为构建与开发服务器
-- [Day.js](https://day.js.org/) 处理日期逻辑（含中文本地化）
-- [solarlunar](https://www.npmjs.com/package/solarlunar) 进行公农历转换
+- [Vite 7](https://vitejs.dev/) 作为开发服务器与构建工具
+- [Day.js](https://day.js.org/) 负责日期计算和本地化
+- [solarlunar](https://www.npmjs.com/package/solarlunar) 完成公农历互转
+- [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) 构建 Service Worker 与 manifest
 
 ## 快速开始
 
@@ -29,53 +31,57 @@ npm run dev
 # 生产构建输出到 dist/
 npm run build
 
-# 本地预览生产构建
+# 预览构建产物
 npm run preview
 ```
 
-启动开发服务器后，按终端提示访问本地地址（通常为 `http://localhost:5173/`）。首次进入页面会自动加载当前年份的节假日数据，如需切换年份，只需跳转至目标月份。
+> 提示：首次进入页面会根据当前年份自动加载节假日数据，如需查看其他年份，只需切换至对应月份或年份即可。
+
+## 可用脚本
+
+- `npm run dev`：启动开发服务器（支持热更新与 PWA 开发模式）
+- `npm run build`：产出面向生产环境的静态资源
+- `npm run preview`：使用本地静态服务器预览构建结果
 
 ## 项目结构
 
 ```
-modern-lunar-calendar/
+calendar/
+├─ public/            # 静态资源（PWA 图标、manifest 等）
 ├─ src/
-│  ├─ components/       # UI 组件
-│  ├─ hooks/            # 数据获取与状态管理
-│  ├─ types/            # TypeScript 类型声明
-│  ├─ utils/            # 工具方法（如 dayjs 封装）
-│  ├─ App.tsx           # 应用入口视图
-│  └─ main.tsx          # React 挂载点
-├─ index.html           # SPA 入口
-├─ package.json         # 项目依赖与脚本
-└─ vite.config.ts       # Vite 配置
+│  ├─ components/     # UI 组件（主日历视图等）
+│  ├─ hooks/          # 自定义数据与状态管理 hooks
+│  ├─ types/          # TypeScript 类型声明
+│  ├─ utils/          # 工具方法（Day.js 配置等）
+│  ├─ App.tsx         # 页面主体
+│  └─ main.tsx        # React 入口
+├─ index.html         # SPA 入口模板
+├─ package.json       # 依赖与脚本
+└─ vite.config.ts     # Vite 与 PWA 配置
 ```
 
 ## 节假日数据说明
 
-- 数据来源：`https://timor.tech/api/holiday/year/{year}`。
-- 请求按年份懒加载，并在内存中缓存，避免重复请求。
-- 调休日会以“调休”标签展示，并在 tooltip 中说明对应假期与方向。
-- 如遇请求失败，界面会在节假日提示区反馈错误，可刷新重试。
-
-## 浏览器兼容性
-
-- 目标为现代浏览器（Chrome、Edge、Firefox、Safari 最新版本）。
-- 主要依赖 CSS Grid、`backdrop-filter` 等特性；低版本浏览器可能退化或不支持。
+- 数据来源：`https://timor.tech/api/holiday/year/{year}`
+- 每个年份只请求一次，并使用内存缓存避免重复调用
+- 假期信息会在单元格中以标签显示，调休日会以“调休”标记并展示对应参考假期
+- 请求失败时会在界面底部提示，可刷新或切换月份重新触发
 
 ## PWA 支持
 
-- 内置 Service Worker 自动缓存构建产物，联网时会在后台获取最新版本。
-- 支持离线访问与桌面安装，可通过浏览器的“安装应用/添加到主屏幕”完成安装。
-- iOS 与 Android 将使用 `public/icons/` 中的自定义图标与主题色，建议在真机环境验证显示效果。
+- 默认启用自动更新的 Service Worker，首次打开需要联网同步缓存
+- 支持离线访问与“安装到桌面”，移动端会使用 `public/icons/` 中的自定义图标
+- 开发环境同样启用 PWA 模式，方便验证缓存与更新逻辑
 
-## 后续可扩展方向
+## 部署到 GitHub Pages
 
-1. 新增年视图、待办事项或日程管理模块。
-2. 支持节假日数据的导出/导入与跨设备同步。
-3. 增加自定义节日/提醒的本地存储功能。
+仓库内置 `.github/workflows/deploy.yml`，在 `main` 分支推送后会自动：
+- 使用 Node.js 20 执行 `npm ci`
+- 构建产物并上传到 GitHub Pages
+- 将 `dist/` 内容发布到 Pages 环境
+
+`vite.config.ts` 中的 `base` 被设置为生产环境下的 `/calendar/`，若部署到其他路径，请相应修改 `base`、PWA manifest 的 `scope` 与 `start_url`。
 
 ---
 
 MIT License © 2025
-
