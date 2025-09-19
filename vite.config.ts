@@ -1,4 +1,4 @@
-ï»¿import { defineConfig } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -13,13 +13,14 @@ export default defineConfig(({ command }) => ({
         enabled: true,
       },
       manifest: {
-        name: 'æ—¥åŽ†',
-        short_name: 'æ—¥åŽ†',
-        description: 'ä¸€ä¸ªç»“åˆå…¬åŽ†ã€å†œåŽ†åŠèŠ‚å‡æ—¥ä¿¡æ¯çš„çŽ°ä»£ Web æ—¥åŽ†ã€‚',
+        scope: '/calendar/',
+        name: 'ÈÕÀú',
+        short_name: 'ÈÕÀú',
+        description: 'Ò»¸ö½áºÏ¹«Àú¡¢Å©Àú¼°½Ú¼ÙÈÕÐÅÏ¢µÄÏÖ´ú Web ÈÕÀú¡£',
         theme_color: '#0b1c2d',
         background_color: '#0b1c2d',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/calendar/',
         lang: 'zh-CN',
         icons: [
           {
@@ -43,3 +44,4 @@ export default defineConfig(({ command }) => ({
     }),
   ],
 }));
+
